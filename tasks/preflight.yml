@@ -68,4 +68,4 @@
   set_fact:
     phpfpm_exporter_checksum: "{{ item.split(' ')[0] }}"
   with_items: "{{ _checksums }}"
-  when: "('linux_' + go_arch) in item"
+  when: "('linux_' + go_arch) in item and not item.endswith('.tar.gz')"
