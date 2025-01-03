@@ -28,8 +28,6 @@
 
 - name: Gather currently installed phpfpm_exporter version (if any)
   command: "/usr/local/bin/phpfpm_exporter version"
-  args:
-    warn: false
   changed_when: false
   register: __phpfpm_exporter_current_version_output
   check_mode: false
@@ -63,9 +61,8 @@
     _checksums: "{{ lookup('url', 'https://github.com/hipages/php-fpm_exporter/releases/download/v' + phpfpm_exporter_version + '/php-fpm_exporter_' + phpfpm_exporter_version + '_checksums.txt', wantlist=True) | list }}"
   run_once: true
 
-
 - name: "Get checksum for {{ go_arch }} architecture"
   set_fact:
     phpfpm_exporter_checksum: "{{ item.split(' ')[0] }}"
   with_items: "{{ _checksums }}"
-  when: "('linux_' + go_arch) in item"
+  when: "('linux_' + go_arch) in item and not item.endswith('.tar.gz')"
